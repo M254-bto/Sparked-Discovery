@@ -180,8 +180,8 @@ function StepHeading({
   subtitle: string;
 }) {
   return (
-    <div className="mb-9">
-      <h2 className="font-serif text-[26px] text-navy font-semibold leading-tight mb-2">
+    <div className="mb-6 sm:mb-9">
+      <h2 className="font-serif text-[22px] sm:text-[26px] text-navy font-semibold leading-tight mb-2">
         {title}
       </h2>
       <p className="text-[14px] text-[#8C8C8C] leading-relaxed">{subtitle}</p>
@@ -455,7 +455,7 @@ function StepCommitment({
 
 function SuccessScreen({ childName }: { childName: string }) {
   return (
-    <div className="bg-surface rounded-2xl border border-subtle shadow-[0_4px_48px_rgba(10,22,40,0.07)] px-8 py-16 sm:px-14 text-center fade-in">
+    <div className="bg-surface rounded-2xl border border-subtle shadow-[0_4px_48px_rgba(10,22,40,0.07)] px-5 py-12 sm:px-8 sm:py-16 md:px-14 text-center fade-in">
       {/* Icon */}
       <div className="flex items-center justify-center mb-8">
         <div className="w-16 h-16 rounded-full border-[1.5px] border-bright flex items-center justify-center">
@@ -655,7 +655,7 @@ export default function RegistrationForm() {
       {/* Cobalt top accent line */}
       <div className="h-[3px] bg-gradient-to-r from-navy/80 via-cobalt to-bright/70" />
 
-      <div className="px-8 pt-10 pb-12 sm:px-12 sm:pt-12">
+      <div className="px-5 pt-8 pb-10 sm:px-8 sm:pt-10 sm:pb-12 md:px-12 md:pt-12">
         {/* Progress */}
         <ProgressIndicator step={step} total={TOTAL} />
 

@@ -32,7 +32,7 @@ export default function Home() {
       </header>
 
       {/* ── Hero ───────────────────────────────────────────────── */}
-      <section className="pt-14 pb-20 px-6 overflow-hidden">
+      <section className="pt-10 pb-14 px-5 sm:pt-14 sm:pb-20 sm:px-6 overflow-hidden">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 lg:gap-20 items-center">
 
           {/* Left: Content */}
@@ -47,30 +47,30 @@ export default function Home() {
 
             {/* Headline */}
             <h1 className="font-serif leading-[1.1] mb-6">
-              <span className="block text-[38px] sm:text-[46px] lg:text-[54px] font-semibold text-navy">
+              <span className="block text-[30px] sm:text-[38px] md:text-[46px] lg:text-[54px] font-semibold text-navy">
                 Where curious kids
               </span>
-              <span className="block text-[38px] sm:text-[46px] lg:text-[54px] font-semibold text-bright">
+              <span className="block text-[30px] sm:text-[38px] md:text-[46px] lg:text-[54px] font-semibold text-bright">
                 become creators.
               </span>
             </h1>
 
             {/* Body */}
-            <p className="text-[16px] text-muted leading-[1.8] mb-10 font-light max-w-[440px]">
+            <p className="text-[15px] sm:text-[16px] text-muted leading-[1.7] sm:leading-[1.8] mb-8 sm:mb-10 font-light max-w-[440px]">
               In 5 hands-on days, your child builds games, apps, and interactive stories
              and experiments with AI. Every student leaves with real projects they can
               proudly share.
             </p>
 
             {/* Stats */}
-            <div className="inline-flex divide-x divide-subtle border border-subtle rounded-xl overflow-hidden bg-surface shadow-[0_2px_16px_rgba(11,30,61,0.06)]">
+            <div className="flex w-full sm:w-auto sm:inline-flex divide-x divide-subtle border border-subtle rounded-xl overflow-hidden bg-surface shadow-[0_2px_16px_rgba(11,30,61,0.06)]">
               {[
                 { value: "5", label: "Days" },
                 { value: "2 hrs", label: "Per Day" },
                 { value: "KES 5K", label: "Investment" },
               ].map((s) => (
-                <div key={s.label} className="px-6 py-4 text-center min-w-[90px]">
-                  <div className="font-serif text-[22px] text-navy font-semibold leading-none">{s.value}</div>
+                <div key={s.label} className="flex-1 sm:flex-none px-4 sm:px-6 py-3 sm:py-4 text-center sm:min-w-[90px]">
+                  <div className="font-serif text-[20px] sm:text-[22px] text-navy font-semibold leading-none">{s.value}</div>
                   <div className="text-[9px] tracking-[0.16em] uppercase text-muted mt-1 font-medium">{s.label}</div>
                 </div>
               ))}
@@ -78,8 +78,8 @@ export default function Home() {
           </div>
 
           {/* Right: Hero image */}
-          <div className="hidden md:block">
-            <div className="relative aspect-[4/3] rounded-2xl overflow-hidden flex items-center justify-center">
+          <div className="block mt-8 md:mt-0">
+            <div className="relative aspect-[4/3] sm:aspect-[4/3] rounded-2xl overflow-hidden flex items-center justify-center max-h-[340px] md:max-h-none">
               {/* Dot grid overlay */}
               <div
                 className="absolute inset-0 pointer-events-none"
@@ -109,7 +109,7 @@ export default function Home() {
       </div>
 
       {/* ── Form ───────────────────────────────────────────────── */}
-      <section className="py-20 px-4">
+      <section className="py-12 px-4 sm:py-20">
         <div className="max-w-[620px] mx-auto">
           <div className="text-center mb-10">
             <div className="inline-flex items-center gap-2 mb-3">
@@ -119,7 +119,7 @@ export default function Home() {
               </span>
               <div className="h-px w-8 bg-cobalt/40" />
             </div>
-            <h2 className="font-serif text-[26px] text-navy font-semibold mb-2">
+            <h2 className="font-serif text-[22px] sm:text-[26px] text-navy font-semibold mb-2">
               Secure your child&apos;s place.
             </h2>
             <p className="text-[14px] text-muted font-light">
@@ -133,12 +133,17 @@ export default function Home() {
       {/* ── Footer ─────────────────────────────────────────────── */}
       <footer className="border-t border-subtle py-10 px-6">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
-          {/* SparkEd logo */}
-          <img
-            src="/Spark.png"
-            alt="SparkEd"
-            className="h-25 w-auto object-contain"
-          />
+          {/* SparkEd logo + tagline */}
+          <div className="flex flex-col items-center sm:items-start gap-1.5">
+            <img
+              src="/Spark.png"
+              alt="SparkEd"
+              className="h-25 w-auto object-contain"
+            />
+            <p className="text-[11px] tracking-[0.12em] text-muted font-medium">
+              SparkEd. The Future Sparked.
+            </p>
+          </div>
 
           <p className="text-[12px] text-muted text-center">
             © {new Date().getFullYear()} SparkEd. Empowering the next generation of creators.

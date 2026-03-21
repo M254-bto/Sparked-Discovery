@@ -39,7 +39,7 @@ export default function Home() {
           <div>
             {/* Badge */}
             <div className="inline-flex items-center gap-2 bg-tint border border-subtle rounded-full px-4 py-1.5 mb-8">
-              <span className="w-1.5 h-1.5 rounded-full bg-bright flex-shrink-0 animate-pulse" />
+              <span className="w-1.5 h-1.5 rounded-full bg-bright shrink-0 animate-pulse" />
               <span className="text-[11px] tracking-[0.15em] uppercase text-cobalt font-semibold">
                 5-Day Immersive · Ages 8–15
               </span>
@@ -56,30 +56,19 @@ export default function Home() {
             </h1>
 
             {/* Body */}
-            <p className="text-[15px] sm:text-[16px] text-muted leading-[1.7] sm:leading-[1.8] mb-8 sm:mb-10 font-light max-w-[440px]">
+            <p className="text-[15px] sm:text-[16px] text-muted leading-[1.7] sm:leading-[1.8] mb-8 sm:mb-10 font-light max-w-110">
               In 5 hands-on days, your child builds games, apps, and interactive stories
              and experiments with AI. Every student leaves with real projects they can
               proudly share.
             </p>
 
             {/* Stats */}
-            <div className="flex w-full sm:w-auto sm:inline-flex divide-x divide-subtle border border-subtle rounded-xl overflow-hidden bg-surface shadow-[0_2px_16px_rgba(11,30,61,0.06)]">
-              {[
-                { value: "5", label: "Days" },
-                { value: "2 hrs", label: "Per Day" },
-                { value: "KES 5K", label: "Investment" },
-              ].map((s) => (
-                <div key={s.label} className="flex-1 sm:flex-none px-4 sm:px-6 py-3 sm:py-4 text-center sm:min-w-[90px]">
-                  <div className="font-serif text-[20px] sm:text-[22px] text-navy font-semibold leading-none">{s.value}</div>
-                  <div className="text-[9px] tracking-[0.16em] uppercase text-muted mt-1 font-medium">{s.label}</div>
-                </div>
-              ))}
-            </div>
+            
           </div>
 
           {/* Right: Hero image */}
           <div className="block mt-8 md:mt-0">
-            <div className="relative aspect-[4/3] sm:aspect-[4/3] rounded-2xl overflow-hidden flex items-center justify-center max-h-[340px] md:max-h-none">
+            <div className="relative aspect-4/3 sm:aspect-4/3 rounded-2xl overflow-hidden flex items-center justify-center max-h-85 md:max-h-none">
               {/* Dot grid overlay */}
               <div
                 className="absolute inset-0 pointer-events-none"
@@ -103,6 +92,85 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── About the Programme ───────────────────────────────── */}
+      <section className="py-14 sm:py-20 px-5 sm:px-6">
+        <div className="max-w-6xl mx-auto">
+
+          {/* Section label */}
+          <div className="inline-flex items-center gap-2 mb-8">
+            <div className="h-px w-8 bg-cobalt/40" />
+            <span className="text-[10px] tracking-[0.22em] uppercase text-cobalt font-semibold">
+              About the Programme
+            </span>
+            <div className="h-px w-8 bg-cobalt/40" />
+          </div>
+
+          <div className="grid lg:grid-cols-[1fr_auto] gap-12 lg:gap-20 items-start">
+
+            {/* Left: body copy */}
+            <div className="space-y-5 max-w-165">
+              <p className="text-[15px] sm:text-[16px] text-charcoal leading-[1.75] sm:leading-[1.85] font-light">
+                Today&apos;s children are growing up in a world shaped by technology and AI.{" "}
+                <span className="font-semibold text-navy">SparkEd Discovery Week</span> is a
+                5-day hands-on experience designed to help them explore the different paths in
+                technology—from coding and game creation to apps and AI.
+              </p>
+
+              <p className="text-[15px] sm:text-[16px] text-charcoal leading-[1.75] sm:leading-[1.85] font-light">
+                Rather than just learning, students will discover what excites them, build real
+                projects, and begin to understand how technology works—removing the fear and
+                confusion around it.
+              </p>
+
+              <p className="text-[15px] sm:text-[16px] text-charcoal leading-[1.75] sm:leading-[1.85] font-light">
+                In five engaging sessions, your child will gain confidence, creativity, and
+                clarity on where their interests lie, guided by experienced mentors in a fun
+                and supportive environment.
+              </p>
+
+              <p className="text-[15px] sm:text-[16px] text-charcoal leading-[1.75] sm:leading-[1.85] font-light border-t border-subtle pt-5 mt-6">
+                A small step that helps your child discover their place in the future of
+                technology.{" "}
+                <span role="img" aria-label="rocket">🚀</span>
+              </p>
+            </div>
+
+            {/* Right: details card */}
+            <div className="bg-surface border border-subtle rounded-2xl shadow-[0_4px_24px_rgba(11,30,61,0.07)] overflow-hidden lg:min-w-65">
+              {/* Card header */}
+              <div className="bg-navy px-6 py-4">
+                <p className="text-[10px] tracking-[0.2em] uppercase text-bright/80 font-semibold mb-0.5">
+                  Programme Details
+                </p>
+                <p className="text-[13px] text-white/60 font-light">April 2026 · Thika Town</p>
+                <p className="text-[11px] text-white/40 font-light mt-0.5">Delib Institute, Alisa Plaza 6th Floor</p>
+              </div>
+
+              {/* Detail rows */}
+              <ul className="divide-y divide-subtle">
+                {[
+                  { label: "Dates", value: "13th – 17th April" },
+                  { label: "Duration", value: "2 Hours per Day" },
+                  { label: "Investment", value: "KES 5,000" },
+                  { label: "Location", value: "Delib Institute, Alisa Plaza 6th Floor, Thika Town" },
+                ].map(({ label, value }) => (
+                  <li key={label} className="px-6 py-4 flex items-start gap-3">
+                    <span className="w-1.5 h-1.5 rounded-full bg-bright mt-1.75 shrink-0" />
+                    <div>
+                      <p className="text-[10px] tracking-[0.14em] uppercase text-muted font-semibold mb-0.5">
+                        {label}
+                      </p>
+                      <p className="text-[14px] text-navy font-medium">{value}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
       {/* ── Divider ────────────────────────────────────────────── */}
       <div className="max-w-6xl mx-auto px-6">
         <div className="h-px bg-subtle" />
@@ -110,7 +178,7 @@ export default function Home() {
 
       {/* ── Form ───────────────────────────────────────────────── */}
       <section className="py-12 px-4 sm:py-20">
-        <div className="max-w-[620px] mx-auto">
+        <div className="max-w-155 mx-auto">
           <div className="text-center mb-10">
             <div className="inline-flex items-center gap-2 mb-3">
               <div className="h-px w-8 bg-cobalt/40" />

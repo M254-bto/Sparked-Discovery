@@ -159,12 +159,12 @@ function ChoiceCard({
     >
       {/* Radio dot */}
       <div
-        className={`mt-[2px] w-4 h-4 rounded-full border-[1.5px] flex-shrink-0 flex items-center justify-center transition-all duration-200 ${
+        className={`mt-0.5 w-4 h-4 rounded-full border-[1.5px] shrink-0 flex items-center justify-center transition-all duration-200 ${
           selected ? "border-white" : "border-[#C0BCB5]"
         }`}
       >
         {selected && (
-          <div className="w-[7px] h-[7px] rounded-full bg-white" />
+          <div className="w-1.75 h-1.75 rounded-full bg-white" />
         )}
       </div>
       <span className="text-[14px] leading-snug font-[450] pt-px">{label}</span>
@@ -503,7 +503,7 @@ function SuccessScreen({ childName }: { childName: string }) {
           "Details on what to bring each day",
         ].map((item) => (
           <div key={item} className="flex items-center gap-3 justify-center text-[13px] text-muted">
-            <div className="w-1 h-1 rounded-full bg-bright flex-shrink-0" />
+            <div className="w-1 h-1 rounded-full bg-bright shrink-0" />
             {item}
           </div>
         ))}
@@ -524,7 +524,7 @@ function ProgressIndicator({ step, total }: { step: number; total: number }) {
   return (
     <div className="mb-10">
       {/* Thin progress bar */}
-      <div className="h-[2px] bg-subtle rounded-full mb-6 overflow-hidden">
+      <div className="h-0.5 bg-subtle rounded-full mb-6 overflow-hidden">
         <div
           className="h-full bg-cobalt rounded-full transition-all duration-500 ease-out"
           style={{ width: `${(step / total) * 100}%` }}
@@ -653,7 +653,7 @@ export default function RegistrationForm() {
   return (
     <div className="bg-surface rounded-2xl border border-subtle shadow-[0_4px_48px_rgba(10,22,40,0.07)] overflow-hidden">
       {/* Cobalt top accent line */}
-      <div className="h-[3px] bg-gradient-to-r from-navy/80 via-cobalt to-bright/70" />
+      <div className="h-0.75 bg-linear-to-r from-navy/80 via-cobalt to-bright/70" />
 
       <div className="px-5 pt-8 pb-10 sm:px-8 sm:pt-10 sm:pb-12 md:px-12 md:pt-12">
         {/* Progress */}
@@ -680,7 +680,7 @@ export default function RegistrationForm() {
             <button
               type="button"
               onClick={handleBack}
-              className="flex-shrink-0 h-12 px-6 rounded-xl border border-subtle text-[14px] text-muted font-medium hover:border-cobalt/40 hover:text-navy transition-all duration-200"
+              className="shrink-0 h-12 px-6 rounded-xl border border-subtle text-[14px] text-muted font-medium hover:border-cobalt/40 hover:text-navy transition-all duration-200"
             >
               Back
             </button>

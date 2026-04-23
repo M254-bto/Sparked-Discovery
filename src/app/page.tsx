@@ -1,12 +1,109 @@
-import { ReactNode } from "react";
+"use client";
+
+import { useState } from "react";
 
 const WHATSAPP_NUMBER = "254700000000"; // Replace with your actual WhatsApp number
-const WHATSAPP_MESSAGE = encodeURIComponent("Hi, I would like to book a trial session at SparkEd Studio.");
-const WHATSAPP_LINK = `https://wa.me/${WHATSAPP_NUMBER}?text=${WHATSAPP_MESSAGE}`;
+
+const AVAILABLE_SLOTS = [
+  "Monday (7 - 8 PM)",
+  "Tuesday (7 - 8 PM)",
+  "Wednesday (7 - 8 PM)",
+  "Thursday (7 - 8 PM)",
+  "Saturday (11:00 AM - 1:00 PM)",
+];
 
 export default function Home() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedSlots, setSelectedSlots] = useState<string[]>([]);
+
+  const handleWhatsAppRedirect = () => {
+    if (selectedSlots.length !== 3) return;
+    
+    const slotsText = selectedSlots.join(", ");
+    const message = `Hi, I’m interested in SparkEd Studio for my child. Time slots: ${slotsText}\nCan you share on how to get started?`;
+    const encodedMessage = encodeURIComponent(message);
+    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
+    
+    window.location.href = url;
+  };
+
+  const toggleSlot = (slot: string) => {
+    if (selectedSlots.includes(slot)) {
+      setSelectedSlots(prev => prev.filter(s => s !== slot));
+    } else if (selectedSlots.length < 3) {
+      setSelectedSlots(prev => [...prev, slot]);
+    }
+  };
+
+  const openModal = (e?: React.MouseEvent) => {
+    if (e) e.preventDefault();
+    setIsModalOpen(true);
+  };
+
   return (
     <main className="min-h-screen bg-cream font-sans relative">
+
+      {/* ── Modal ──────────────────────────────────────────────── */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy/80 backdrop-blur-sm">
+          <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl relative animate-in fade-in zoom-in duration-200">
+            <button 
+              onClick={() => setIsModalOpen(false)}
+              className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-cream text-muted hover:text-navy hover:bg-tint transition-colors"
+            >
+              ✕
+            </button>
+            
+            <h3 className="font-serif text-[24px] text-navy font-semibold mb-2">
+              Choose your preferred times
+            </h3>
+            <p className="text-[15px] text-muted mb-6">
+              Please select <strong className="text-navy font-semibold">three</strong> time slots that work best for your child.
+            </p>
+
+            <div className="space-y-3 mb-8">
+              {AVAILABLE_SLOTS.map(slot => {
+                const isSelected = selectedSlots.includes(slot);
+                const isDisabled = !isSelected && selectedSlots.length >= 3;
+                return (
+                  <button
+                    key={slot}
+                    disabled={isDisabled}
+                    onClick={() => toggleSlot(slot)}
+                    className={`w-full text-left px-5 py-3.5 rounded-xl border-2 transition-all flex items-center justify-between ${
+                      isSelected 
+                        ? 'border-bright bg-bright/5 text-navy' 
+                        : isDisabled 
+                          ? 'border-subtle bg-cream/50 text-muted/50 cursor-not-allowed'
+                          : 'border-subtle hover:border-cobalt/50 bg-white text-charcoal'
+                    }`}
+                  >
+                    <span className="font-medium text-[15px]">{slot}</span>
+                    {isSelected && (
+                      <div className="w-5 h-5 rounded-full bg-bright flex items-center justify-center shrink-0">
+                        <svg className="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path></svg>
+                      </div>
+                    )}
+                  </button>
+                )
+              })}
+            </div>
+
+            <button
+              disabled={selectedSlots.length !== 3}
+              onClick={handleWhatsAppRedirect}
+              className={`w-full flex justify-center items-center gap-2 py-4 rounded-xl font-medium transition-all ${
+                selectedSlots.length === 3
+                  ? 'bg-[#25D366] hover:bg-[#1DA851] text-white shadow-[0_4px_14px_rgba(37,211,102,0.3)] hover:shadow-[0_6px_20px_rgba(37,211,102,0.4)]'
+                  : 'bg-subtle text-muted cursor-not-allowed'
+              }`}
+            >
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+              Continue to WhatsApp
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* ── Header ─────────────────────────────────────────────── */}
       <header className="sticky top-0 z-20 border-b border-subtle bg-[rgba(244,247,252,0.9)] backdrop-blur-md">
@@ -23,9 +120,9 @@ export default function Home() {
           {/* Right */}
           <div className="flex items-center gap-3">
             <span className="hidden sm:inline text-[12px] text-muted">Ages 8–15</span>
-            <a href={WHATSAPP_LINK} className="text-[12px] font-semibold text-white bg-bright hover:bg-cobalt transition-colors rounded-full px-4 py-1.5 shadow-sm">
+            <button onClick={openModal} className="text-[12px] font-semibold text-white bg-bright hover:bg-cobalt transition-colors rounded-full px-4 py-1.5 shadow-sm cursor-pointer">
               Book Trial
-            </a>
+            </button>
           </div>
         </div>
       </header>
@@ -62,10 +159,10 @@ export default function Home() {
             </div>
 
             <div>
-              <a href={WHATSAPP_LINK} className="inline-flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#1DA851] text-white font-medium rounded-full px-6 sm:px-8 py-3.5 transition-all shadow-[0_4px_14px_rgba(37,211,102,0.3)] hover:shadow-[0_6px_20px_rgba(37,211,102,0.4)]">
+              <button onClick={openModal} className="inline-flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#1DA851] text-white font-medium rounded-full px-6 sm:px-8 py-3.5 transition-all shadow-[0_4px_14px_rgba(37,211,102,0.3)] hover:shadow-[0_6px_20px_rgba(37,211,102,0.4)] cursor-pointer">
                 <svg className="w-5 h-5 shrink-0" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
                 Book a Trial Session on WhatsApp
-              </a>
+              </button>
             </div>
           </div>
 
@@ -104,9 +201,9 @@ export default function Home() {
             <span className="font-medium text-navy">But they don’t build.</span><br/><br/>
             And the longer that gap exists, the harder it becomes to close.
           </p>
-          <a href={WHATSAPP_LINK} className="inline-flex items-center justify-center gap-2 text-cobalt font-medium hover:text-bright transition-colors bg-tint px-6 py-2.5 rounded-full">
+          <button onClick={openModal} className="inline-flex items-center justify-center gap-2 text-cobalt font-medium hover:text-bright transition-colors bg-tint px-6 py-2.5 rounded-full cursor-pointer">
             👉 Chat with us on WhatsApp to get your child started
-          </a>
+          </button>
         </div>
       </section>
 
@@ -221,9 +318,9 @@ export default function Home() {
                  Start with a trial session, then continue with a monthly plan for consistent growth.
                </p>
             </div>
-            <a href={WHATSAPP_LINK} className="inline-flex items-center gap-2 text-[14px] font-medium text-white bg-navy hover:bg-cobalt transition-colors rounded-full px-8 py-3 shadow-sm">
+            <button onClick={openModal} className="inline-flex items-center gap-2 text-[14px] font-medium text-white bg-navy hover:bg-cobalt transition-colors rounded-full px-8 py-3 shadow-sm cursor-pointer">
               👉 Book your child’s first session
-            </a>
+            </button>
           </div>
 
           {/* Gains */}
@@ -287,9 +384,9 @@ export default function Home() {
               <p className="text-[15px] text-muted mb-8 font-light flex-grow">
                 A single 1-hour session for your child to experience the program and build their first project.
               </p>
-              <a href={WHATSAPP_LINK} className="w-full text-center py-3.5 rounded-xl border-2 border-navy text-navy font-medium hover:bg-navy hover:text-white transition-all">
+              <button onClick={openModal} className="w-full text-center py-3.5 rounded-xl border-2 border-navy text-navy font-medium hover:bg-navy hover:text-white transition-all cursor-pointer">
                 Book Trial
-              </a>
+              </button>
             </div>
 
             {/* Monthly */}
@@ -318,9 +415,9 @@ export default function Home() {
                   <span className="text-[15px] text-white/90">Best for consistency and progress</span>
                 </li>
               </ul>
-              <a href={WHATSAPP_LINK} className="w-full text-center py-3.5 rounded-xl bg-bright hover:bg-bright/90 text-white font-medium transition-colors shadow-lg">
+              <button onClick={openModal} className="w-full text-center py-3.5 rounded-xl bg-bright hover:bg-bright/90 text-white font-medium transition-colors shadow-lg cursor-pointer">
                 Choose Monthly
-              </a>
+              </button>
             </div>
           </div>
           
@@ -328,9 +425,9 @@ export default function Home() {
              <p className="text-[15px] text-charcoal font-medium mb-4">
                Most parents choose the monthly plan so their child can build skills consistently.
              </p>
-             <a href={WHATSAPP_LINK} className="inline-flex items-center justify-center gap-2 text-cobalt font-semibold hover:text-bright transition-colors text-[16px]">
+             <button onClick={openModal} className="inline-flex items-center justify-center gap-2 text-cobalt font-semibold hover:text-bright transition-colors text-[16px] cursor-pointer">
               👉 Book a trial session now on WhatsApp
-             </a>
+             </button>
           </div>
 
         </div>
@@ -369,9 +466,9 @@ export default function Home() {
                 <p className="text-[15px] text-muted">Thika Town</p>
               </div>
             </div>
-            <a href={WHATSAPP_LINK} className="w-full inline-flex justify-center items-center gap-2 py-3.5 rounded-xl bg-navy text-white text-[15px] font-medium hover:bg-cobalt transition-colors shadow-md">
+            <button onClick={openModal} className="w-full inline-flex justify-center items-center gap-2 py-3.5 rounded-xl bg-navy text-white text-[15px] font-medium hover:bg-cobalt transition-colors shadow-md cursor-pointer">
               👉 Get directions and book via WhatsApp
-            </a>
+            </button>
           </div>
 
         </div>
@@ -390,10 +487,10 @@ export default function Home() {
           <p className="text-[18px] sm:text-[20px] text-white/90 leading-[1.8] font-light mb-12">
             SparkEd Studio gives them a place to explore, build, and grow with technology — consistently.
           </p>
-          <a href={WHATSAPP_LINK} className="inline-flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#1DA851] text-white font-medium rounded-full px-10 py-4 text-[16px] transition-all shadow-[0_4px_14px_rgba(37,211,102,0.3)] hover:shadow-[0_6px_20px_rgba(37,211,102,0.4)] hover:scale-105">
+          <button onClick={openModal} className="inline-flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#1DA851] text-white font-medium rounded-full px-10 py-4 text-[16px] transition-all shadow-[0_4px_14px_rgba(37,211,102,0.3)] hover:shadow-[0_6px_20px_rgba(37,211,102,0.4)] hover:scale-105 cursor-pointer">
             <svg className="w-6 h-6 shrink-0" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
             Book a Trial Session
-          </a>
+          </button>
         </div>
       </section>
 
@@ -434,16 +531,16 @@ export default function Home() {
       </footer>
 
       {/* ── Floating WhatsApp Button ───────────────────────────── */}
-      <a 
-        href={WHATSAPP_LINK}
-        className="fixed bottom-6 right-6 z-50 flex items-center justify-center w-14 h-14 bg-[#25D366] hover:bg-[#1DA851] text-white rounded-full shadow-[0_4px_14px_rgba(37,211,102,0.4)] hover:shadow-[0_6px_20px_rgba(37,211,102,0.5)] transition-all hover:scale-105 group"
+      <button 
+        onClick={openModal}
+        className="fixed bottom-6 right-6 z-50 flex items-center justify-center w-14 h-14 bg-[#25D366] hover:bg-[#1DA851] text-white rounded-full shadow-[0_4px_14px_rgba(37,211,102,0.4)] hover:shadow-[0_6px_20px_rgba(37,211,102,0.5)] transition-all hover:scale-105 group cursor-pointer"
         aria-label="Chat on WhatsApp"
       >
         <span className="absolute right-full mr-4 bg-white text-charcoal text-[13px] font-medium py-2 px-3 rounded-xl shadow-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all transform translate-x-2 group-hover:translate-x-0 pointer-events-none border border-subtle flex items-center gap-2">
           💬 Chat on WhatsApp
         </span>
         <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
-      </a>
+      </button>
 
     </main>
   );

@@ -113,7 +113,7 @@ export default function Home() {
             <img src="/Spark.png" alt="SparkEd" className="h-8 w-auto object-contain" />
             <span className="h-4 w-px bg-subtle hidden sm:block" />
             <span className="text-[10px] tracking-[0.18em] uppercase text-muted hidden sm:block font-medium">
-              Ongoing Tech Program
+              SparkEd Studio
             </span>
           </div>
 
@@ -132,14 +132,7 @@ export default function Home() {
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 lg:gap-20 items-center">
           {/* Left: Content */}
           <div>
-            <div className="inline-flex items-center gap-2 bg-tint border border-subtle rounded-full px-4 py-1.5 mb-8">
-              <span className="w-1.5 h-1.5 rounded-full bg-bright shrink-0 animate-pulse" />
-              <span className="text-[11px] tracking-[0.15em] uppercase text-cobalt font-semibold">
-                SparkEd Studio · Ages 8–15
-              </span>
-            </div>
-
-            <h1 className="font-serif leading-[1.1] mb-6">
+             <h1 className="font-serif leading-[1.1] mb-6">
               <span className="block text-[30px] sm:text-[38px] md:text-[46px] lg:text-[54px] font-semibold text-navy">
                 Your child uses technology every day.
               </span>

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-const WHATSAPP_NUMBER = "254700000000"; // Replace with your actual WhatsApp number
+const WHATSAPP_NUMBER = "254798159691";
 
 const AVAILABLE_SLOTS = [
   "Monday (7 - 8 PM)",

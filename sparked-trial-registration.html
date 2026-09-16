@@ -301,7 +301,10 @@
     errorBanner.classList.remove('show');
     submitBtn.disabled = true;
     submitLabel.textContent = 'Saving your spot…';
-    submitArrow.outerHTML = '<span class="spinner" id="submitArrow"></span>';
+    const currentArrow = document.getElementById('submitArrow');
+    if (currentArrow) {
+      currentArrow.outerHTML = '<span class="spinner" id="submitArrow"></span>';
+    }
 
     const phoneVal = document.getElementById('phone').value;
     const emailVal = document.getElementById('email').value;
@@ -312,7 +315,12 @@
         headers: { 'Accept': 'application/json' },
         body: new FormData(form),
       });
-      if (!response.ok) throw new Error('Request failed');
+      if (!response.ok) throw new Error('Network error. Please try again.');
+
+      const data = await response.json().catch(() => null);
+      if (data && (data.success === 'false' || data.success === false)) {
+        throw new Error(data.message || "We couldn't complete the registration. Please try again.");
+      }
 
       document.getElementById('successPhone').textContent = phoneVal;
       document.getElementById('successEmail').textContent = emailVal;
@@ -320,11 +328,14 @@
       successPanel.classList.remove('hidden');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (err) {
-      errorBanner.textContent = "We couldn't complete the registration. Please try again.";
+      errorBanner.textContent = err.message || "We couldn't complete the registration. Please try again.";
       errorBanner.classList.add('show');
       submitBtn.disabled = false;
       submitLabel.textContent = 'Reserve my spot';
-      document.getElementById('submitArrow').outerHTML = '<svg id="submitArrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+      const arrowOrSpinner = document.getElementById('submitArrow');
+      if (arrowOrSpinner) {
+        arrowOrSpinner.outerHTML = '<svg id="submitArrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+      }
     }
   });
 
@@ -337,6 +348,10 @@
     form.classList.remove('hidden');
     submitBtn.disabled = false;
     submitLabel.textContent = 'Reserve my spot';
+    const arrowOrSpinner = document.getElementById('submitArrow');
+    if (arrowOrSpinner) {
+      arrowOrSpinner.outerHTML = '<svg id="submitArrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 </script>

@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SparkEd — Trial Class Registration</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fbf8f2;
+    --ink: #123c31;
+    --ink-soft: #456158;
+    --muted: #587166;
+    --muted-2: #70877b;
+    --muted-3: #668075;
+    --accent: #ed9200;
+    --accent-hover: #d98100;
+    --secondary: #e8f0e7;
+    --border: #dce5db;
+    --border-2: #e6ede5;
+    --field-bg: #f7faf5;
+    --privacy-bg: #fff8e8;
+    --privacy-text: #80642f;
+    --error-bg: #fdecec;
+    --error-text: #9a3131;
+    --radius: 1rem;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    line-height: 1.5;
+  }
+  .font-display { font-family: 'DM Serif Display', Georgia, serif; }
+  .wrap { max-width: 640px; margin: 0 auto; padding: 2.5rem 1.25rem 4rem; }
+
+  header.top { display: flex; align-items: center; gap: 0.7rem; margin-bottom: 2rem; }
+  .brand-dot { display: inline-block; width: 1.5rem; height: 1.5rem; border-radius: 999px; background: var(--accent); position: relative; }
+  .brand-dot::after { content: ''; position: absolute; width: .3rem; height: .3rem; border-radius: 999px; background: var(--accent); right: -.5rem; bottom: .15rem; }
+  .brand-name { font-family: 'DM Serif Display', Georgia, serif; font-size: 1.5rem; letter-spacing: -0.04em; }
+  .brand-name .o { color: var(--accent); }
+
+  .eyebrow { display: inline-flex; align-items: center; gap: .55rem; border-radius: 999px; background: var(--secondary); color: var(--ink); padding: .55rem .9rem; font-size: .7rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 1.4rem; }
+  .eyebrow-divider { height: .9rem; width: 1px; background: #aac1ac; }
+
+  h1 { font-family: 'DM Serif Display', Georgia, serif; font-size: 2.6rem; line-height: 1; letter-spacing: -0.04em; margin: 0 0 1rem; color: #0b3b2e; }
+  h1 em { font-style: italic; }
+  .lede { font-size: 1.05rem; line-height: 1.7; color: var(--ink-soft); max-width: 34rem; margin: 0 0 1.6rem; }
+
+  .checklist { list-style: none; margin: 0 0 2rem; padding: 0; display: flex; flex-direction: column; gap: .6rem; font-size: .92rem; color: var(--muted); }
+  .checklist li { display: flex; gap: .6rem; align-items: flex-start; }
+  .checklist svg { flex-shrink: 0; margin-top: .15rem; color: var(--accent); }
+
+  .card { background: #fff; border: 1px solid var(--border); border-radius: 1.75rem; box-shadow: 0 20px 70px -45px var(--ink); padding: 1.5rem; }
+  @media (min-width: 560px) { .card { padding: 2.2rem; } }
+
+  .section-title { font-family: 'DM Serif Display', Georgia, serif; font-size: 1.7rem; letter-spacing: -0.03em; margin: 0 0 .2rem; }
+  .section-sub { font-size: .88rem; color: var(--muted-2); margin: 0 0 1.4rem; }
+
+  label { display: block; font-size: .82rem; font-weight: 600; margin-bottom: .35rem; color: var(--ink); }
+  label.xs { font-size: .72rem; }
+  input {
+    width: 100%; border: 1px solid var(--border); border-radius: .75rem; padding: .7rem .9rem;
+    font-family: 'DM Sans', sans-serif; font-size: .95rem; background: #fff; color: var(--ink);
+    transition: border-color 150ms, box-shadow 150ms;
+  }
+  input::placeholder { color: #a1b0a5; }
+  input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(237,146,0,0.15); }
+
+  .grid-2 { display: grid; gap: 1rem; grid-template-columns: 1fr; margin-bottom: 1.8rem; }
+  @media (min-width: 560px) { .grid-2 { grid-template-columns: 1fr 1fr; } .grid-2 .full { grid-column: 1 / -1; } }
+
+  .divider { border-top: 1px solid var(--border-2); padding-top: 1.8rem; margin-top: .2rem; }
+  .kids-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; margin-bottom: 1.1rem; }
+  .kids-count { border-radius: 999px; background: #f5f8f3; padding: .3rem .7rem; font-size: .72rem; font-weight: 700; color: var(--muted-3); white-space: nowrap; }
+
+  .child-row { display: flex; align-items: flex-end; gap: .7rem; background: var(--field-bg); border-radius: 1rem; padding: .7rem; margin-bottom: .7rem; }
+  .child-row .name-field { flex: 1; }
+  .child-row .age-field { width: 5.5rem; }
+  .child-row input { background: #fff; }
+  .remove-btn {
+    border: none; background: none; cursor: pointer; padding: .55rem; border-radius: .7rem;
+    color: #9bad9f; margin-bottom: .1rem; transition: background 150ms, color 150ms;
+  }
+  .remove-btn:hover:not(:disabled) { background: var(--secondary); color: var(--ink); }
+  .remove-btn:disabled { opacity: .3; cursor: not-allowed; }
+
+  .add-btn {
+    display: inline-flex; align-items: center; gap: .4rem; border: none; background: none; cursor: pointer;
+    font-size: .88rem; font-weight: 700; color: var(--ink); padding: .3rem 0; margin-top: .2rem;
+    transition: color 150ms;
+  }
+  .add-btn:hover:not(:disabled) { color: var(--accent); }
+  .add-btn:disabled { opacity: .4; cursor: not-allowed; }
+
+  .privacy { background: var(--privacy-bg); color: var(--privacy-text); border-radius: 1rem; padding: .9rem 1rem; font-size: .85rem; line-height: 1.55; margin: 1.8rem 0 1.4rem; }
+
+  .submit-btn {
+    width: 100%; border: none; border-radius: 1rem; background: var(--accent); color: #fff;
+    font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 1rem; padding: 1rem;
+    cursor: pointer; display: flex; align-items: center; justify-content: center; gap: .5rem;
+    transition: background 150ms, transform 150ms;
+  }
+  .submit-btn:hover:not(:disabled) { background: var(--accent-hover); }
+  .submit-btn:active:not(:disabled) { transform: scale(0.98); }
+  .submit-btn:disabled { opacity: .75; cursor: not-allowed; }
+
+  .spinner { width: 1.1rem; height: 1.1rem; border-radius: 50%; border: 2px solid rgba(255,255,255,0.4); border-top-color: #fff; animation: spin .8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .error-banner { background: var(--error-bg); color: var(--error-text); border-radius: .8rem; padding: .8rem 1rem; font-size: .85rem; margin-bottom: 1.2rem; display: none; }
+  .error-banner.show { display: block; }
+
+  .success { text-align: center; padding: 2.5rem 0.5rem; }
+  .success-icon { width: 4.5rem; height: 4.5rem; border-radius: 50%; background: var(--secondary); color: var(--ink); display: flex; align-items: center; justify-content: center; margin: 0 auto; }
+  .success-eyebrow { margin-top: 1.4rem; font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .14em; color: var(--accent); }
+  .success h3 { font-family: 'DM Serif Display', Georgia, serif; font-size: 2rem; letter-spacing: -0.03em; margin: .5rem 0 0; }
+  .success p { color: var(--muted); line-height: 1.7; max-width: 26rem; margin: .9rem auto 0; }
+  .success button { margin-top: 1.6rem; background: none; border: none; font-size: .9rem; font-weight: 700; color: var(--ink); text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 2px; text-underline-offset: 4px; cursor: pointer; }
+
+  footer { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: .6rem; font-size: .82rem; color: var(--muted-3); }
+  footer .brand-row { display: flex; align-items: center; gap: .5rem; }
+  footer .brand-row strong { color: var(--ink); font-weight: 600; }
+  footer a { color: var(--ink); font-weight: 600; text-decoration: none; }
+  footer a:hover { color: var(--accent); }
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <span class="brand-dot" aria-hidden="true"></span>
+    <span class="brand-name">spark<span class="o">Ed</span><span class="o">.</span></span>
+  </header>
+
+  <span class="eyebrow">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18M3 12h18"/></svg>
+    Online trial class <span class="eyebrow-divider"></span> 3 &amp; 10 Oct 2026
+  </span>
+
+  <h1>Let's spark <em>something.</em></h1>
+  <ul class="checklist">
+    <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Live online trial class via a link shared after registration</li>
+    <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Choose either 3 October or 10 October 2026 at 7 PM</li>
+    <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Best suited for curious learners aged 8–13</li>
+  </ul>
+
+  <div class="card">
+
+    <div id="errorBanner" class="error-banner"></div>
+
+    <form id="regForm" action="https://formsubmit.co/ajax/sparkeducationthika@gmail.com" method="POST">
+      <input type="hidden" name="_subject" value="New SparkEd Trial Class Registration">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_template" value="table">
+
+      <div>
+        <h3 class="section-title">Parent or guardian details</h3>
+        <p class="section-sub">We'll use these details to confirm the class link.</p>
+      </div>
+
+      <div class="grid-2">
+        <div class="full">
+          <label for="parentName">Parent / guardian name</label>
+          <input id="parentName" name="Parent / Guardian Name" type="text" required placeholder="e.g. Wanjiku Kamau">
+        </div>
+        <div>
+          <label for="phone">Phone number</label>
+          <input id="phone" name="Phone Number" type="tel" required placeholder="e.g. 0712 345 678">
+        </div>
+        <div>
+          <label for="email">Email address</label>
+          <input id="email" name="Email Address" type="email" required placeholder="you@example.com">
+        </div>
+      </div>
+
+      <div class="divider">
+        <div class="kids-head">
+          <div>
+            <h3 class="section-title">Who's joining?</h3>
+            <p class="section-sub" style="margin-bottom:0;">Add one or more children aged 8–13.</p>
+          </div>
+          <span class="kids-count" id="kidsCount">1 learner</span>
+        </div>
+
+        <div id="childrenList"></div>
+
+        <button type="button" class="add-btn" id="addChildBtn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+          Add another child
+        </button>
+      </div>
+
+      <div class="privacy">Your information is only used to coordinate this SparkEd trial class. We won't share it with third parties.</div>
+
+      <button type="submit" class="submit-btn" id="submitBtn">
+        <span id="submitLabel">Reserve my spot</span>
+        <svg id="submitArrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+    </form>
+
+    <div id="successPanel" class="success hidden">
+      <div class="success-icon">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <p class="success-eyebrow">You're on the list</p>
+      <h3>We'll see you in class.</h3>
+      <p>Thank you for registering. SparkEd will contact you on <strong id="successPhone"></strong> or <strong id="successEmail"></strong> with the class details.</p>
+      <button type="button" id="resetBtn">Register another family</button>
+    </div>
+
+  </div>
+
+  <footer>
+    <div class="brand-row">
+      <span class="brand-dot" style="width:1rem;height:1rem;" aria-hidden="true"></span>
+      <span><strong>The Future</strong> <span style="color:var(--accent); font-weight:600;">Sparked.</span></span>
+    </div>
+    <p style="margin:0;">Powered by AfriBrain Technologies · <a href="https://sparked.afribs.co.ke" target="_blank" rel="noreferrer">sparked.afribs.co.ke</a></p>
+  </footer>
+
+</div>
+
+<script>
+  const MAX_CHILDREN = 10;
+  const MIN_CHILDREN = 1;
+  let childCount = 0;
+
+  const childrenList = document.getElementById('childrenList');
+  const addChildBtn = document.getElementById('addChildBtn');
+  const kidsCount = document.getElementById('kidsCount');
+
+  function addChild() {
+    if (childCount >= MAX_CHILDREN) return;
+    childCount++;
+    const row = document.createElement('div');
+    row.className = 'child-row';
+    row.innerHTML = `
+      <div class="name-field">
+        <label class="xs">Child ${childCount} name</label>
+        <input type="text" name="Child ${childCount} Name" required placeholder="e.g. Amani">
+      </div>
+      <div class="age-field">
+        <label class="xs">Age</label>
+        <input type="number" name="Child ${childCount} Age" min="8" max="13" required placeholder="8–13">
+      </div>
+      <button type="button" class="remove-btn" aria-label="Remove child">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/></svg>
+      </button>
+    `;
+    row.querySelector('.remove-btn').addEventListener('click', () => removeChild(row));
+    childrenList.appendChild(row);
+    refreshState();
+  }
+
+  function removeChild(row) {
+    if (childrenList.children.length <= MIN_CHILDREN) return;
+    row.remove();
+    renumberChildren();
+    refreshState();
+  }
+
+  function renumberChildren() {
+    childCount = 0;
+    Array.from(childrenList.children).forEach((row) => {
+      childCount++;
+      row.querySelector('.name-field label').textContent = `Child ${childCount} name`;
+      row.querySelector('.name-field input').name = `Child ${childCount} Name`;
+      row.querySelector('.age-field input').name = `Child ${childCount} Age`;
+    });
+  }
+
+  function refreshState() {
+    const count = childrenList.children.length;
+    kidsCount.textContent = `${count} ${count === 1 ? 'learner' : 'learners'}`;
+    addChildBtn.disabled = count >= MAX_CHILDREN;
+    Array.from(childrenList.querySelectorAll('.remove-btn')).forEach((btn) => {
+      btn.disabled = count <= MIN_CHILDREN;
+    });
+  }
+
+  addChildBtn.addEventListener('click', addChild);
+  addChild(); // start with one child row
+
+  // Form submission via FormSubmit AJAX endpoint
+  const form = document.getElementById('regForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const submitLabel = document.getElementById('submitLabel');
+  const submitArrow = document.getElementById('submitArrow');
+  const errorBanner = document.getElementById('errorBanner');
+  const successPanel = document.getElementById('successPanel');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errorBanner.classList.remove('show');
+    submitBtn.disabled = true;
+    submitLabel.textContent = 'Saving your spot…';
+    submitArrow.outerHTML = '<span class="spinner" id="submitArrow"></span>';
+
+    const phoneVal = document.getElementById('phone').value;
+    const emailVal = document.getElementById('email').value;
+
+    try {
+      const response = await fetch(form.action, {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: new FormData(form),
+      });
+      if (!response.ok) throw new Error('Request failed');
+
+      document.getElementById('successPhone').textContent = phoneVal;
+      document.getElementById('successEmail').textContent = emailVal;
+      form.classList.add('hidden');
+      successPanel.classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (err) {
+      errorBanner.textContent = "We couldn't complete the registration. Please try again.";
+      errorBanner.classList.add('show');
+      submitBtn.disabled = false;
+      submitLabel.textContent = 'Reserve my spot';
+      document.getElementById('submitArrow').outerHTML = '<svg id="submitArrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+    }
+  });
+
+  document.getElementById('resetBtn').addEventListener('click', () => {
+    form.reset();
+    childrenList.innerHTML = '';
+    childCount = 0;
+    addChild();
+    successPanel.classList.add('hidden');
+    form.classList.remove('hidden');
+    submitBtn.disabled = false;
+    submitLabel.textContent = 'Reserve my spot';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+</script>
+
+</body>
+</html>

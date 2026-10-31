@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SparkEd — Trial Class Registration</title>
+<title>Sparked Inventors Camp — Registration</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
@@ -48,7 +48,7 @@
   .eyebrow { display: inline-flex; align-items: center; gap: .55rem; border-radius: 999px; background: var(--secondary); color: var(--ink); padding: .55rem .9rem; font-size: .7rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 1.4rem; }
   .eyebrow-divider { height: .9rem; width: 1px; background: #aac1ac; }
 
-  h1 { font-family: 'DM Serif Display', Georgia, serif; font-size: 2.6rem; line-height: 1; letter-spacing: -0.04em; margin: 0 0 1rem; color: #0b3b2e; }
+  h1 { font-family: 'DM Serif Display', Georgia, serif; font-size: 2.6rem; line-height: 1.08; letter-spacing: -0.04em; margin: 0 0 1rem; color: #0b3b2e; }
   h1 em { font-style: italic; }
   .lede { font-size: 1.05rem; line-height: 1.7; color: var(--ink-soft); max-width: 34rem; margin: 0 0 1.6rem; }
 
@@ -72,6 +72,18 @@
   input::placeholder { color: #a1b0a5; }
   input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(237,146,0,0.15); }
 
+  select {
+    width: 100%; border: 1px solid var(--border); border-radius: .75rem; padding: .7rem 2.2rem .7rem .9rem;
+    font-family: 'DM Sans', sans-serif; font-size: .95rem; background: #fff; color: var(--ink);
+    appearance: none; -webkit-appearance: none; -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23587166' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right .85rem center;
+    transition: border-color 150ms, box-shadow 150ms;
+    cursor: pointer;
+  }
+  select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(237,146,0,0.15); }
+
   .grid-2 { display: grid; gap: 1rem; grid-template-columns: 1fr; margin-bottom: 1.8rem; }
   @media (min-width: 560px) { .grid-2 { grid-template-columns: 1fr 1fr; } .grid-2 .full { grid-column: 1 / -1; } }
 
@@ -79,16 +91,56 @@
   .kids-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; margin-bottom: 1.1rem; }
   .kids-count { border-radius: 999px; background: #f5f8f3; padding: .3rem .7rem; font-size: .72rem; font-weight: 700; color: var(--muted-3); white-space: nowrap; }
 
-  .child-row { display: flex; align-items: flex-end; gap: .7rem; background: var(--field-bg); border-radius: 1rem; padding: .7rem; margin-bottom: .7rem; }
-  .child-row .name-field { flex: 1; }
-  .child-row .age-field { width: 5.5rem; }
-  .child-row input { background: #fff; }
-  .remove-btn {
-    border: none; background: none; cursor: pointer; padding: .55rem; border-radius: .7rem;
-    color: #9bad9f; margin-bottom: .1rem; transition: background 150ms, color 150ms;
+  .child-row {
+    background: var(--field-bg);
+    border: 1px solid var(--border-2);
+    border-radius: 1rem;
+    padding: .85rem .95rem;
+    margin-bottom: .85rem;
+    display: flex;
+    flex-direction: column;
+    gap: .65rem;
   }
-  .remove-btn:hover:not(:disabled) { background: var(--secondary); color: var(--ink); }
-  .remove-btn:disabled { opacity: .3; cursor: not-allowed; }
+  .child-row-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .child-tag {
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--muted-2);
+  }
+  .child-row-inputs {
+    display: grid;
+    gap: .75rem;
+    grid-template-columns: 1fr;
+  }
+  .child-row-inputs .sub-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.6fr;
+    gap: .75rem;
+  }
+  @media (min-width: 540px) {
+    .child-row-inputs {
+      grid-template-columns: 1.8fr 0.85fr 1.45fr;
+      align-items: end;
+    }
+    .child-row-inputs .sub-grid {
+      display: contents;
+    }
+  }
+  .child-row input, .child-row select { background: #fff; }
+
+  .remove-btn {
+    border: none; background: none; cursor: pointer; padding: .2rem .45rem; border-radius: .5rem;
+    color: #9bad9f; font-size: .75rem; font-weight: 600; display: inline-flex; align-items: center; gap: .25rem;
+    transition: background 150ms, color 150ms;
+  }
+  .remove-btn:hover:not(:disabled) { background: #fee2e2; color: #b91c1c; }
+  .remove-btn:disabled { display: none; }
 
   .add-btn {
     display: inline-flex; align-items: center; gap: .4rem; border: none; background: none; cursor: pointer;
@@ -140,14 +192,14 @@
   </header>
 
   <span class="eyebrow">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18M3 12h18"/></svg>
-    Online trial class <span class="eyebrow-divider"></span> 3 &amp; 10 Oct 2026
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+    Sparked Inventors Camp <span class="eyebrow-divider"></span> Virtual &amp; In-Person
   </span>
 
-  <h1>Let's spark <em>something.</em></h1>
+  <h1>Sparked Inventors <em>Camp.</em></h1>
   <ul class="checklist">
-    <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Live online trial class via a link shared after registration</li>
-    <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Best suited for curious learners aged 8–13</li>
+    <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Available both virtually and in-person — choose mode for each child</li>
+    <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Designed for curious young innovators &amp; builders aged 10+</li>
   </ul>
 
   <div class="card">
@@ -155,13 +207,13 @@
     <div id="errorBanner" class="error-banner"></div>
 
     <form id="regForm" action="https://formsubmit.co/ajax/sparkeducationthika@gmail.com" method="POST">
-      <input type="hidden" name="_subject" value="New SparkEd Trial Class Registration">
+      <input type="hidden" name="_subject" value="New Sparked Inventors Camp Registration">
       <input type="hidden" name="_captcha" value="false">
       <input type="hidden" name="_template" value="table">
 
       <div>
         <h3 class="section-title">Parent or guardian details</h3>
-        <p class="section-sub">We'll use these details to confirm the class link.</p>
+        <p class="section-sub">We'll use these details to share camp schedules and joining details.</p>
       </div>
 
       <div class="grid-2">
@@ -183,7 +235,7 @@
         <div class="kids-head">
           <div>
             <h3 class="section-title">Who's joining?</h3>
-            <p class="section-sub" style="margin-bottom:0;">Add one or more children aged 8–13.</p>
+            <p class="section-sub" style="margin-bottom:0;">Add one or more children aged 10+.</p>
           </div>
           <span class="kids-count" id="kidsCount">1 learner</span>
         </div>
@@ -196,7 +248,7 @@
         </button>
       </div>
 
-      <div class="privacy">Your information is only used to coordinate this SparkEd trial class. We won't share it with third parties.</div>
+      <div class="privacy">Your information is only used to coordinate the Sparked Inventors Camp. We won't share it with third parties.</div>
 
       <button type="submit" class="submit-btn" id="submitBtn">
         <span id="submitLabel">Reserve my spot</span>
@@ -209,8 +261,8 @@
         <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
       </div>
       <p class="success-eyebrow">You're on the list</p>
-      <h3>We'll see you in class.</h3>
-      <p>Thank you for registering. SparkEd will contact you on <strong id="successPhone"></strong> or <strong id="successEmail"></strong> with the class details.</p>
+      <h3>We'll see you at camp!</h3>
+      <p>Thank you for registering. SparkEd will contact you on <strong id="successPhone"></strong> or <strong id="successEmail"></strong> with camp schedules and details.</p>
       <button type="button" id="resetBtn">Register another family</button>
     </div>
 
@@ -241,17 +293,33 @@
     const row = document.createElement('div');
     row.className = 'child-row';
     row.innerHTML = `
-      <div class="name-field">
-        <label class="xs">Child ${childCount} name</label>
-        <input type="text" name="Child ${childCount} Name" required placeholder="e.g. Amani">
+      <div class="child-row-top">
+        <span class="child-tag">Child ${childCount}</span>
+        <button type="button" class="remove-btn" aria-label="Remove child">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18M6 6l12 12"/></svg>
+          <span>Remove</span>
+        </button>
       </div>
-      <div class="age-field">
-        <label class="xs">Age</label>
-        <input type="number" name="Child ${childCount} Age" min="8" max="13" required placeholder="8–13">
+      <div class="child-row-inputs">
+        <div class="name-field">
+          <label class="xs">Child ${childCount} name</label>
+          <input type="text" name="Child ${childCount} Name" required placeholder="e.g. Amani">
+        </div>
+        <div class="sub-grid">
+          <div class="age-field">
+            <label class="xs">Age (10+)</label>
+            <input type="number" name="Child ${childCount} Age" min="10" max="19" required placeholder="10+">
+          </div>
+          <div class="mode-field">
+            <label class="xs">Attendance mode</label>
+            <select name="Child ${childCount} Attendance Mode" required>
+              <option value="" disabled selected>Select mode</option>
+              <option value="In-Person">In-Person</option>
+              <option value="Virtual">Virtual</option>
+            </select>
+          </div>
+        </div>
       </div>
-      <button type="button" class="remove-btn" aria-label="Remove child">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/></svg>
-      </button>
     `;
     row.querySelector('.remove-btn').addEventListener('click', () => removeChild(row));
     childrenList.appendChild(row);
@@ -269,9 +337,16 @@
     childCount = 0;
     Array.from(childrenList.children).forEach((row) => {
       childCount++;
-      row.querySelector('.name-field label').textContent = `Child ${childCount} name`;
-      row.querySelector('.name-field input').name = `Child ${childCount} Name`;
-      row.querySelector('.age-field input').name = `Child ${childCount} Age`;
+      const tag = row.querySelector('.child-tag');
+      if (tag) tag.textContent = `Child ${childCount}`;
+      const nameLabel = row.querySelector('.name-field label');
+      if (nameLabel) nameLabel.textContent = `Child ${childCount} name`;
+      const nameInput = row.querySelector('.name-field input');
+      if (nameInput) nameInput.name = `Child ${childCount} Name`;
+      const ageInput = row.querySelector('.age-field input');
+      if (ageInput) ageInput.name = `Child ${childCount} Age`;
+      const modeSelect = row.querySelector('.mode-field select');
+      if (modeSelect) modeSelect.name = `Child ${childCount} Attendance Mode`;
     });
   }
 

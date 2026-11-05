@@ -133,7 +133,7 @@ module.exports = async function handler(req, res) {
                   <ul style="margin: 0; padding-left: 20px; line-height: 1.8; font-size: 14px; color: #374151;">
                     <li><strong>Programme Dates:</strong> 16th – 27th November</li>
                     <li><strong>Duration:</strong> 2-week immersive camp</li>
-                    <li><strong>In-Person Venue:</strong> Section 9, Thika (11:00 AM – 1:00 PM)</li>
+                    <li><strong>In-Person Venue:</strong> <a href="https://maps.app.goo.gl/YrsHLzVibuQvtVteA" target="_blank" style="color: #c39132; font-weight: 600; text-decoration: underline;">Section 9, Thika (Open in Google Maps ↗)</a> · 11:00 AM – 1:00 PM</li>
                     <li><strong>Online Sessions:</strong> Evening sessions (7:00 PM – 8:30 PM)</li>
                   </ul>
                 </div>

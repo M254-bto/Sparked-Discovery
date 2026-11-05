@@ -374,8 +374,8 @@ details p{color:var(--muted);margin:14px 0 4px;max-width:650px;line-height:1.7}
 </main>
 <footer class="footer"><div class="wrap"><span>© <span id="yr"></span> <strong>SparkEd</strong> · The Future Sparked.</span><span>Powered by <a href="https://afribs.co.ke" target="_blank" rel="noopener">AfriBrain Technologies</a></span></div></footer>
 <script>
-const CFG={price:{virtual:5000,inperson:8000},api:"/api/stkpush",registerApi:"/api/register",currency:"KES",support:"sparkeducationthika@gmail.com",paybill:"4331541"};
-const S={step:0,p:{name:"",phone:"",email:"",consent:false},kids:[{name:"",age:"",mode:"virtual"}],pay:"",e:{},errMessage:"",paidLater:false};
+const CFG={price:{virtual:5000,inperson:8000},api:"/api/stkpush",queryApi:"/api/stkquery",registerApi:"/api/register",currency:"KES",support:"sparkeducationthika@gmail.com",paybill:"4331541"};
+const S={step:0,p:{name:"",phone:"",email:"",consent:false},kids:[{name:"",age:"",mode:"virtual"}],pay:"",e:{},errMessage:"",paidLater:false,cancelPolling:false};
 const $=s=>document.querySelector(s),app=$("#app");$("#yr").textContent=new Date().getFullYear();
 const esc=t=>String(t).replace(/[&<>\"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const fmt=n=>CFG.currency+" "+n.toLocaleString("en-KE");
@@ -388,7 +388,13 @@ function render(){
  if(S.step===0)app.innerHTML=bar(0)+`<h3>Parent or guardian</h3><p class="hint">We’ll use this to send schedules and joining details.</p>${fld("pn","Full name","text",S.p.name,"Jane Wanjiru")}${fld("pp","Phone (M-Pesa number)","tel",S.p.phone,"0712 345 678")}${fld("pe","Email","email",S.p.email,"you@example.com")}<div class="nav-actions"><span></span><button class="btn" id="next">Continue →</button></div>`;
  if(S.step===1)app.innerHTML=bar(1)+`<h3>Who’s joining?</h3><p class="hint">Add each child aged 10+ and choose how they’ll attend.</p>${S.kids.map((k,i)=>`<div class="kid"><header><span>Child ${i+1}</span>${S.kids.length>1?`<button class="link" data-rm="${i}">Remove</button>`:""}</header><div class="row"><div>${fld("kn"+i,"Name","text",k.name,"First name")}</div><div>${fld("ka"+i,"Age","number",k.age,"10")}</div></div><div class="seg"><button data-m="${i}:virtual" class="${k.mode==="virtual"?"on":""}">Online<small>${fmt(CFG.price.virtual)}</small></button><button data-m="${i}:inperson" class="${k.mode==="inperson"?"on":""}">In-person<small>${fmt(CFG.price.inperson)}</small></button></div></div>`).join("")}<button class="link" id="add">+ Add another child</button><label style="display:flex;gap:10px;font-weight:500;margin-top:18px"><input type="checkbox" id="cs" ${S.p.consent?"checked":""}> <span>I’m the parent or guardian and consent to my child’s details being used to run the camp.</span></label><div class="err">${S.e.cs||""}</div><div class="nav-actions"><button class="btn ghost" id="back">← Back</button><button class="btn" id="next">Continue →</button></div>`;
  if(S.step===2)app.innerHTML=bar(2)+`<h3>Payment details</h3><p class="hint">Payment is optional now. You can pay via M-Pesa prompt, or complete registration and pay later.</p><div class="sum">${S.kids.map(k=>`<div><span>${esc(k.name)} · ${k.mode==="virtual"?"Online":"In-person"}</span><span>${fmt(CFG.price[k.mode])}</span></div>`).join("")}<div class="tot"><span>Total Amount</span><span>${fmt(total())}</span></div></div><div class="pay-box"><div class="pay-box-title">M-Pesa Paybill Details</div><div class="pay-box-row"><span>Paybill:</span><strong class="mono">${CFG.paybill}</strong></div><div class="pay-box-row"><span>Account:</span><strong class="mono">${esc(S.p.name||"[Parent's Name]")}</strong></div></div><div style="margin-top:18px"><label for="mp">Send M-Pesa prompt now (Optional)</label><p class="hint" style="font-size:.82rem;margin:0 0 8px">Enter phone number to receive an STK push on your phone:</p><input id="mp" type="tel" value="${esc(S.pay||S.p.phone)}" placeholder="0712 345 678" class="${S.e.mp?"bad":""}"><div class="err">${S.e.mp||""}</div></div><div class="nav-actions"><button class="btn ghost" id="back">← Back</button><div class="pay-action-group"><button class="btn ghost" id="paylater">Register &amp; Pay Later</button><button class="btn mp" id="pay">Pay Now (${fmt(total())})</button></div></div><div class="demo">Choose "Register &amp; Pay Later" to secure your spot today without immediate payment.</div>`;
- if(S.step===3)app.innerHTML=`<div class="wait"><div class="spin"></div><h3>Check your phone</h3><p class="hint">Enter your M-Pesa PIN on your phone to complete payment.</p></div>`;
+ if(S.step===3){
+   app.innerHTML=`<div class="wait"><div class="spin"></div><h3>Prompt sent to phone</h3><p class="hint" style="max-width:440px;margin:0 auto 16px;line-height:1.6">A Safaricom prompt has been sent to <strong>${esc(S.pay||S.p.phone)}</strong>.<br>Enter your M-Pesa PIN on your phone to complete payment.</p><p style="font-size:.82rem;color:rgba(255,255,255,.6);margin-bottom:20px">Waiting for payment confirmation from Safaricom...</p><button class="btn ghost" id="poll_paylater" style="font-size:.82rem">I'll pay later via Paybill instead</button></div>`;
+   setTimeout(()=>{
+     const btn=document.getElementById("poll_paylater");
+     if(btn)btn.onclick=()=>{S.cancelPolling=true;payLater();};
+   },0);
+ }
  if(S.step===4){
    if(S.paidLater){
      app.innerHTML=`<div class="ok"><div class="chk">✓</div><h3>You’re registered! See you at camp!</h3><p class="hint">Thanks, ${esc(S.p.name.split(" ")[0])}. Your children’s spots are reserved.</p><div class="pay-box" style="text-align:left;max-width:440px;margin:20px auto"><div class="pay-box-title">Payment details for when you're ready</div><div class="pay-box-row"><span>Paybill:</span><strong class="mono">${CFG.paybill}</strong></div><div class="pay-box-row"><span>Account:</span><strong class="mono">${esc(S.p.name||"[Parent's Name]")}</strong></div><div class="pay-box-row"><span>Total Amount:</span><strong class="mono">${fmt(total())}</strong></div></div><p style="font-size:.85rem;color:rgba(255,255,255,.7)">Schedules and joining details will be sent to ${esc(S.p.email)}.</p><button class="btn ghost" id="again">Register another family</button></div>`;
@@ -477,30 +483,57 @@ async function pay(){
  if(!msisdn(S.pay)){S.e.mp="Enter a valid M-Pesa number";render();return}
  S.paidLater=false;
  S.errMessage="";
+ S.cancelPolling=false;
  S.step=3;render();
  try{
-   let ok=false;
-   if(!CFG.api){
-     await new Promise(r=>setTimeout(r,1800));
-     ok=true;
-   }else{
-     const r=await fetch(CFG.api,{
-       method:"POST",
-       headers:{"Content-Type":"application/json"},
-       body:JSON.stringify({parent:S.p,kids:S.kids,phone:msisdn(S.pay),amount:total()})
-     });
-     const d=await r.json();
-     if(d.ok){
-       if(d.preview)await new Promise(res=>setTimeout(res,1200));
-       ok=true;
-     }else{
-       S.errMessage=d.message||"";
+   const r=await fetch(CFG.api,{
+     method:"POST",
+     headers:{"Content-Type":"application/json"},
+     body:JSON.stringify({parent:S.p,kids:S.kids,phone:msisdn(S.pay),amount:total()})
+   });
+   const d=await r.json();
+   if(!d.ok){
+     S.errMessage=d.message||"";
+     S.step=5;
+     render();
+     return;
+   }
+
+   const checkoutId=d.checkoutRequestId;
+   let confirmed=false;
+   let attempts=0;
+   const maxAttempts=15;
+
+   while(!confirmed && attempts<maxAttempts && !S.cancelPolling && S.step===3){
+     await new Promise(res=>setTimeout(res,3000));
+     attempts++;
+     if(S.cancelPolling || S.step!==3) return;
+
+     try{
+       const qRes=await fetch(CFG.queryApi,{
+         method:"POST",
+         headers:{"Content-Type":"application/json"},
+         body:JSON.stringify({checkoutRequestId:checkoutId})
+       });
+       const qData=await qRes.json();
+       if(qData.status==="COMPLETED"){
+         confirmed=true;
+         break;
+       }else if(qData.status==="CANCELLED"||qData.status==="FAILED"||qData.status==="TIMEOUT"){
+         S.errMessage=qData.resultDesc||"Payment was cancelled or timed out.";
+         S.step=5;
+         render();
+         return;
+       }
+     }catch(qErr){
+       console.warn("Polling retry...",qErr);
      }
    }
-   if(ok){
-     await sendRegistration("Paid / M-Pesa Prompt Triggered");
+
+   if(confirmed){
+     await sendRegistration("Paid via M-Pesa");
      S.step=4;
-   }else{
+   }else if(!S.cancelPolling && S.step===3){
      S.step=5;
    }
  }catch(e){

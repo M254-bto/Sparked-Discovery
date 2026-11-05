@@ -36,6 +36,7 @@ module.exports = async function handler(req, res) {
     return res.status(200).json({
       ok: true,
       preview: true,
+      checkoutRequestId: 'mock_' + Date.now(),
       message: 'Preview mode: Set DARAJA_CONSUMER_KEY and DARAJA_CONSUMER_SECRET in Vercel to trigger live M-Pesa prompts.'
     });
   }

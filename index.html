@@ -396,7 +396,7 @@ function render(){
      app.innerHTML=`<div class="ok"><div class="chk">✓</div><h3>You’re in. See you at camp!</h3><p class="hint">Thanks, ${esc(S.p.name.split(" ")[0])}. Your registration and payment are received. We’ll send schedules and joining details to ${esc(S.p.email)}.</p><p style="color:var(--gold-light)">${S.kids.map(k=>esc(k.name)).join(" · ")}</p><button class="btn ghost" id="again">Register another family</button></div>`;
    }
  }
- if(S.step===5)app.innerHTML=`<div class="ok"><h3>Payment didn’t go through</h3><p class="hint">${S.errMessage?esc(S.errMessage):`No money was taken. You can try again, or contact ${CFG.support}.`}</p><div class="pay-action-group" style="justify-content:center;margin-top:16px"><button class="btn ghost" id="paylater">Continue Without Paying</button><button class="btn" id="retry">Try M-Pesa Again</button></div></div>`;
+ if(S.step===5)app.innerHTML=`<div class="ok"><div class="chk" style="background:#b76d35;font-size:1.6rem">!</div><h3>M-Pesa prompt couldn’t be completed</h3><p class="hint" style="max-width:520px;margin:0 auto 20px;line-height:1.65">No funds were deducted. You can complete your registration right now and pay later, or pay manually via Paybill <strong>${CFG.paybill}</strong> (Account: <strong>${esc(S.p.name||"Parent's Name")}</strong>).</p><div class="pay-action-group" style="justify-content:center;margin-top:20px;gap:12px"><button class="btn" id="paylater" style="background:var(--gold);border-color:var(--gold);color:#fff">Register &amp; Pay Later</button><button class="btn ghost" id="retry">Try Phone Prompt Again</button></div></div>`;
  bind();
 }
 

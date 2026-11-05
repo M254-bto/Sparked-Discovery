@@ -19,27 +19,29 @@ module.exports = async function handler(req, res) {
     return res.status(400).json({ ok: false, message: 'Phone and amount are required.' });
   }
 
-  // Daraja environment variables
-  const consumerKey = process.env.DARAJA_CONSUMER_KEY;
-  const consumerSecret = process.env.DARAJA_CONSUMER_SECRET;
-  const shortcode = process.env.DARAJA_BUSINESS_SHORTCODE || '4331541';
-  const passkey = process.env.DARAJA_PASSKEY || 'bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919';
-  const environment = (process.env.DARAJA_ENVIRONMENT || 'sandbox').toLowerCase();
-  const transactionType = process.env.DARAJA_TRANSACTION_TYPE || 'CustomerPayBillOnline';
-  const callbackUrl = process.env.DARAJA_CALLBACK_URL || `https://${req.headers.host || 'localhost'}/api/callback`;
+  // Daraja environment variables (sanitized)
+  const consumerKey = (process.env.DARAJA_CONSUMER_KEY || '').trim();
+  const consumerSecret = (process.env.DARAJA_CONSUMER_SECRET || '').trim();
+  const shortcode = (process.env.DARAJA_BUSINESS_SHORTCODE || '4331541').trim();
+  const passkey = (process.env.DARAJA_PASSKEY || 'bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919').trim();
+  const envVar = (process.env.DARAJA_ENVIRONMENT || '').trim().toLowerCase();
+  const isProduction = envVar === 'production' || (envVar !== 'sandbox' && shortcode !== '174379');
+  const transactionType = (process.env.DARAJA_TRANSACTION_TYPE || 'CustomerPayBillOnline').trim();
+  const host = (req.headers && req.headers.host) || 'localhost';
+  const callbackUrl = (process.env.DARAJA_CALLBACK_URL || `https://${host}/api/callback`).trim();
 
   // If credentials are not yet configured in environment variables, provide smooth fallback preview mode
   if (!consumerKey || !consumerSecret) {
-    console.warn('[Daraja] Credentials not configured in environment variables. Falling back to preview mode.');
+    console.warn('[Daraja] Credentials not configured in Vercel environment variables. Falling back to preview mode.');
     return res.status(200).json({
       ok: true,
       preview: true,
-      message: 'Preview mode: Set DARAJA_CONSUMER_KEY and DARAJA_CONSUMER_SECRET in environment variables to trigger live M-Pesa prompts.'
+      message: 'Preview mode: Set DARAJA_CONSUMER_KEY and DARAJA_CONSUMER_SECRET in Vercel to trigger live M-Pesa prompts.'
     });
   }
 
   try {
-    const baseUrl = environment === 'production'
+    const baseUrl = isProduction
       ? 'https://api.safaricom.co.ke'
       : 'https://sandbox.safaricom.co.ke';
 
@@ -54,8 +56,11 @@ module.exports = async function handler(req, res) {
 
     if (!tokenRes.ok) {
       const errText = await tokenRes.text();
-      console.error('[Daraja] Token generation failed:', errText);
-      return res.status(502).json({ ok: false, message: 'Failed to authenticate with M-Pesa. Please verify your Daraja credentials.' });
+      console.error('[Daraja Auth Error] Target:', baseUrl, 'Status:', tokenRes.status, 'Response:', errText);
+      return res.status(502).json({
+        ok: false,
+        message: 'The M-Pesa automated prompt is currently unavailable. You can register now and pay via Paybill 4331541.'
+      });
     }
 
     const { access_token } = await tokenRes.json();
@@ -108,15 +113,17 @@ module.exports = async function handler(req, res) {
         message: stkData.CustomerMessage || 'STK Push sent successfully.'
       });
     } else {
-      console.error('[Daraja] STK Push error:', stkData);
+      console.error('[Daraja STK Error]:', stkData);
       return res.status(400).json({
         ok: false,
-        message: stkData.errorMessage || stkData.ResponseDescription || 'Failed to initiate M-Pesa payment.'
+        message: 'The M-Pesa prompt was not completed. You can register now and pay via Paybill 4331541.'
       });
     }
   } catch (err) {
-    console.error('[Daraja] Exception occurred:', err);
-    return res.status(500).json({ ok: false, message: 'Server error processing M-Pesa request.' });
+    console.error('[Daraja Exception]:', err);
+    return res.status(500).json({
+      ok: false,
+      message: 'Unable to connect to the M-Pesa service at this time. Please complete your registration and pay later via Paybill.'
+    });
   }
 };
-

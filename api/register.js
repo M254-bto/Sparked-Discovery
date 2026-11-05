@@ -21,7 +21,7 @@ module.exports = async function handler(req, res) {
 
   const resendApiKey = (process.env.RESEND_API_KEY || '').trim();
   const adminEmail = (process.env.ADMIN_EMAIL || 'sparkeducationthika@gmail.com').trim();
-  const fromEmail = (process.env.RESEND_FROM_EMAIL || 'SparkEd Inventors Camp <onboarding@resend.dev>').trim();
+  const fromEmail = (process.env.RESEND_FROM_EMAIL || 'Inventors Camp by SparkEd <noreply@resend.client.afribs.co.ke>').replace(/^["']|["']$/g, '').trim();
 
   // If RESEND_API_KEY is not configured yet
   if (!resendApiKey) {

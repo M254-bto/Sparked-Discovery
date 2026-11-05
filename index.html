@@ -374,7 +374,7 @@ details p{color:var(--muted);margin:14px 0 4px;max-width:650px;line-height:1.7}
 </main>
 <footer class="footer"><div class="wrap"><span>© <span id="yr"></span> <strong>SparkEd</strong> · The Future Sparked.</span><span>Powered by <a href="https://afribs.co.ke" target="_blank" rel="noopener">AfriBrain Technologies</a></span></div></footer>
 <script>
-const CFG={price:{virtual:5000,inperson:8000},api:"/api/stkpush",currency:"KES",support:"sparkeducationthika@gmail.com",paybill:"4331541",formsubmit:"https://formsubmit.co/ajax/sparkeducationthika@gmail.com"};
+const CFG={price:{virtual:5000,inperson:8000},api:"/api/stkpush",registerApi:"/api/register",currency:"KES",support:"sparkeducationthika@gmail.com",paybill:"4331541"};
 const S={step:0,p:{name:"",phone:"",email:"",consent:false},kids:[{name:"",age:"",mode:"virtual"}],pay:"",e:{},errMessage:"",paidLater:false};
 const $=s=>document.querySelector(s),app=$("#app");$("#yr").textContent=new Date().getFullYear();
 const esc=t=>String(t).replace(/[&<>\"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -438,33 +438,26 @@ function validate(){
  return true;
 }
 
-async function submitToFormSubmit(status){
+async function sendRegistration(status){
  const payload={
-   _subject:`New SparkEd Inventors Camp Registration - ${S.p.name||'Parent'}`,
-   _template:"table",
-   _captcha:"false",
-   "Parent Name":S.p.name,
-   "Parent Phone":S.p.phone,
-   "Parent Email":S.p.email,
-   "Number of Children":S.kids.length,
-   "Payment Status":status,
-   "Total Fee":fmt(total()),
-   "Registration Time":new Date().toLocaleString("en-KE",{timeZone:"Africa/Nairobi"})
+   parent:S.p,
+   kids:S.kids,
+   phone:msisdn(S.pay||S.p.phone)||(S.pay||S.p.phone),
+   amount:total(),
+   paymentStatus:status
  };
- S.kids.forEach((k,i)=>{
-   payload[`Child ${i+1}`]=`${k.name} (Age: ${k.age}, Format: ${k.mode==="virtual"?"Online - KES 5,000":"In-person - KES 8,000"})`;
- });
- if(S.pay||S.p.phone){
-   payload["M-Pesa Number"]=msisdn(S.pay||S.p.phone)||(S.pay||S.p.phone);
- }
  try{
-   await fetch(CFG.formsubmit,{
+   const ctrl=new AbortController();
+   const t=setTimeout(()=>ctrl.abort(),6000);
+   await fetch(CFG.registerApi,{
      method:"POST",
-     headers:{"Content-Type":"application/json","Accept":"application/json"},
-     body:JSON.stringify(payload)
+     headers:{"Content-Type":"application/json"},
+     body:JSON.stringify(payload),
+     signal:ctrl.signal
    });
+   clearTimeout(t);
  }catch(err){
-   console.warn("FormSubmit send error:",err);
+   console.warn("[Register API error]",err);
  }
 }
 
@@ -472,8 +465,8 @@ async function payLater(){
  sync();
  S.paidLater=true;
  const btn=document.getElementById("paylater");
- if(btn){btn.disabled=true;btn.textContent="Registering...";}
- await submitToFormSubmit("Pay Later (Paybill: 4331541)");
+ if(btn){btn.disabled=true;btn.textContent="Confirming...";}
+ await sendRegistration("Pay Later (Paybill: 4331541)");
  S.step=4;
  render();
  app.scrollIntoView({behavior:"smooth"});
@@ -488,7 +481,7 @@ async function pay(){
  try{
    let ok=false;
    if(!CFG.api){
-     await new Promise(r=>setTimeout(r,2400));
+     await new Promise(r=>setTimeout(r,1800));
      ok=true;
    }else{
      const r=await fetch(CFG.api,{
@@ -498,14 +491,14 @@ async function pay(){
      });
      const d=await r.json();
      if(d.ok){
-       if(d.preview)await new Promise(res=>setTimeout(res,1800));
+       if(d.preview)await new Promise(res=>setTimeout(res,1200));
        ok=true;
      }else{
        S.errMessage=d.message||"";
      }
    }
    if(ok){
-     await submitToFormSubmit("Paid / M-Pesa Prompt Triggered");
+     await sendRegistration("Paid / M-Pesa Prompt Triggered");
      S.step=4;
    }else{
      S.step=5;

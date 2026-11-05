@@ -31,23 +31,6 @@ module.exports = async function handler(req, res) {
   // If credentials are not yet configured in environment variables, provide smooth fallback preview mode
   if (!consumerKey || !consumerSecret) {
     console.warn('[Daraja] Credentials not configured in environment variables. Falling back to preview mode.');
-    // Forward registration details to FormSubmit in preview mode as well
-    fetch('https://formsubmit.co/ajax/sparkeducationthika@gmail.com', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify({
-        _subject: `New SparkEd Camp Registration - ${parent && parent.name ? parent.name : 'Parent'}`,
-        _template: 'table',
-        _captcha: 'false',
-        'Parent Name': parent ? parent.name : '',
-        'Parent Phone': parent ? parent.phone : '',
-        'Parent Email': parent ? parent.email : '',
-        'Payment Status': 'Preview Mode (Unpaid)',
-        'Amount': amount,
-        'Children': kids && kids.length ? kids.map(k => `${k.name} (${k.mode}, age ${k.age})`).join('; ') : ''
-      })
-    }).catch(() => {});
-
     return res.status(200).json({
       ok: true,
       preview: true,
@@ -118,25 +101,6 @@ module.exports = async function handler(req, res) {
     const stkData = await stkRes.json();
 
     if (stkRes.ok && stkData.ResponseCode === '0') {
-      fetch('https://formsubmit.co/ajax/sparkeducationthika@gmail.com', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify({
-          _subject: `New SparkEd Camp Registration - ${parent && parent.name ? parent.name : 'Parent'}`,
-          _template: 'table',
-          _captcha: 'false',
-          'Parent Name': parent ? parent.name : '',
-          'Parent Phone': parent ? parent.phone : '',
-          'Parent Email': parent ? parent.email : '',
-          'Payment Status': 'M-Pesa STK Push Sent',
-          'M-Pesa Phone': formattedPhone,
-          'Amount': amount,
-          'MerchantRequestID': stkData.MerchantRequestID,
-          'CheckoutRequestID': stkData.CheckoutRequestID,
-          'Children': kids && kids.length ? kids.map(k => `${k.name} (${k.mode}, age ${k.age})`).join('; ') : ''
-        })
-      }).catch(() => {});
-
       return res.status(200).json({
         ok: true,
         merchantRequestId: stkData.MerchantRequestID,
